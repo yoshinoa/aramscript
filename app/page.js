@@ -9,7 +9,7 @@ function ChampionGenerator() {
   const generateChampions = async () => {
     try {
       const response = await axios.get(
-        "https://ddragon.leagueoflegends.com/cdn/11.11.1/data/en_US/champion.json"
+        "https://ddragon.leagueoflegends.com/cdn/11.11.1/data/zh_CN/champion.json"
       );
       const championsData = response.data.data;
       const champions = Object.values(championsData).map(
