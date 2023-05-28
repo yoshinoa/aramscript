@@ -53,19 +53,27 @@ function ChampionGenerator() {
       </div>
       <button onClick={generateChampions}>Generate Champions</button>
       {blueTeam.length > 0 && redTeam.length > 0 && (
-        <div>
-          <h2>Blue Team:</h2>
-          <ul>
-            {blueTeam.map((champion, index) => (
-              <li key={index}>{champion}</li>
-            ))}
-          </ul>
-          <h2>Red Team:</h2>
-          <ul>
-            {redTeam.map((champion, index) => (
-              <li key={index}>{champion}</li>
-            ))}
-          </ul>
+        <div className="team-container">
+          <div className="team-column">
+            <h2>Blue Team:</h2>
+            <ul>
+              {blueTeam.map((champion, index) => (
+                <li className="lipog" key={index}>
+                  {champion}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="team-column">
+            <h2>Red Team:</h2>
+            <ul>
+              {redTeam.map((champion, index) => (
+                <li className="lipog" key={index}>
+                  {champion}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       )}
     </div>
