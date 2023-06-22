@@ -51,9 +51,12 @@ function ChampionGenerator() {
             className="rounded border-2 border-gray-600 bg-gray-700 text-gray-200 p-2"
           >
             <option value="en_US">English</option>
-            <option value="zh_CN">中文</option>
             <option value="ja_JP">日本語</option>
-            <option value="fr_FR">French</option>
+            <option value="zh_CN">简体中文</option>
+            <option value="zh_TW">繁體中文</option>
+            <option value="ko_KR">한국어</option>
+            <option value="ru_RU">Русский</option>
+            <option value="el_GR">Ελληνικά</option>
           </select>
         </div>
         <button
