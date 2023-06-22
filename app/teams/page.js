@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Footer from "../components/footer";
+import axios from "axios";
 
 export default function TeamsPage() {
   const [data, setData] = useState("");
@@ -14,8 +15,26 @@ export default function TeamsPage() {
 
   useEffect(() => {
     if (data) {
-      const teamsDataStr = decodeURIComponent(escape(window.atob(data)));
-      setTeamsData(JSON.parse(teamsDataStr));
+      const compressedData = Buffer.from(data, "base64");
+      const localData = JSON.parse(compressedData.toString());
+
+      axios
+        .get(
+          `https://ddragon.leagueoflegends.com/cdn/13.12.1/data/${localData.lang}/champion.json`
+        )
+        .then((response) => {
+          const championsData = response.data.data;
+          console.log(localData.blueTeam);
+          const blueTeam = localData.blueTeam.map((x) => ({
+            name: championsData[x].name,
+            img: `http://ddragon.leagueoflegends.com/cdn/13.12.1/img/champion/${championsData[x].image.full}`,
+          }));
+          const redTeam = localData.redTeam.map((x) => ({
+            name: championsData[x].name,
+            img: `http://ddragon.leagueoflegends.com/cdn/13.12.1/img/champion/${championsData[x].image.full}`,
+          }));
+          setTeamsData({ blueTeam, redTeam, timestamp: localData.timestamp });
+        });
     }
   }, [data]);
 

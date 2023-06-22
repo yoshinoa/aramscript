@@ -20,10 +20,14 @@ function ChampionGenerator() {
         `https://ddragon.leagueoflegends.com/cdn/13.12.1/data/${selectedLanguage}/champion.json`
       );
       const championsData = response.data.data;
-      const champions = Object.values(championsData).map((champion) => ({
-        name: champion.name,
-        img: `http://ddragon.leagueoflegends.com/cdn/13.12.1/img/champion/${champion.image.full}`,
-      }));
+      const champions = Object.entries(championsData).map(
+        ([originalName, champion]) => ({
+          originalName,
+          name: champion.name,
+          img: `http://ddragon.leagueoflegends.com/cdn/13.12.1/img/champion/${champion.image.full}`,
+        })
+      );
+      console.log(championsData);
 
       const shuffledChampions = champions.sort(() => 0.5 - Math.random());
 
@@ -33,14 +37,17 @@ function ChampionGenerator() {
       setBlueTeam(blueTeamChampions);
       setRedTeam(redTeamChampions);
       const timestamp = new Date().toISOString();
+
       const teamsData = {
-        blueTeam: blueTeamChampions,
-        redTeam: redTeamChampions,
+        blueTeam: blueTeamChampions.map((x) => x.originalName),
+        redTeam: redTeamChampions.map((x) => x.originalName),
         timestamp,
+        lang: selectedLanguage,
       };
+      console.log(teamsData.blueTeam);
 
       const teamsDataStr = JSON.stringify(teamsData);
-      const encodedTeamsData = btoa(unescape(encodeURIComponent(teamsDataStr)));
+      const encodedTeamsData = Buffer(teamsDataStr).toString("base64");
 
       // set shareable URL to state
       setShareUrl(`${window.location.origin}/teams?data=${encodedTeamsData}`);
