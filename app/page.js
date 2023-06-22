@@ -15,12 +15,13 @@ function ChampionGenerator() {
   const generateChampions = async () => {
     try {
       const response = await axios.get(
-        `https://ddragon.leagueoflegends.com/cdn/11.11.1/data/${selectedLanguage}/champion.json`
+        `https://ddragon.leagueoflegends.com/cdn/13.12.1/data/${selectedLanguage}/champion.json`
       );
       const championsData = response.data.data;
-      const champions = Object.values(championsData).map(
-        (champion) => champion.name
-      );
+      const champions = Object.values(championsData).map((champion) => ({
+        name: champion.name,
+        img: `http://ddragon.leagueoflegends.com/cdn/13.12.1/img/champion/${champion.image.full}`,
+      }));
 
       const shuffledChampions = champions.sort(() => 0.5 - Math.random());
 
@@ -35,41 +36,52 @@ function ChampionGenerator() {
   };
 
   return (
-    <div>
-      <h1>League of Legends Champion Generator</h1>
-      <div>
-        <label htmlFor="language">Select Language:</label>
-        <select
-          id="language"
-          value={selectedLanguage}
-          onChange={handleChangeLanguage}
+    <div className="bg-gray-800 text-gray-100 min-h-screen font-sans">
+      <div className="flex flex-col items-center py-10">
+        <h1 className="text-4xl mb-5">League of Legends Champion Generator</h1>
+        <div className="mb-5">
+          <label htmlFor="language" className="mr-3">
+            Select Language:
+          </label>
+          <select
+            id="language"
+            value={selectedLanguage}
+            onChange={handleChangeLanguage}
+            className="rounded border-2 border-gray-600 bg-gray-700 text-gray-200 p-2"
+          >
+            <option value="en_US">English</option>
+            <option value="zh_CN">中文</option>
+            <option value="ja_JP">日本語</option>
+            <option value="fr_FR">French</option>
+          </select>
+        </div>
+        <button
+          onClick={generateChampions}
+          className="bg-gray-600 hover:bg-gray-500 text-gray-200 font-bold py-2 px-4 rounded"
         >
-          <option value="en_US">English</option>
-          <option value="zh_CN">中文</option>
-          <option value="ja_JP">日本語</option>
-          <option value="fr_FR">French</option>
-          {/* Add more language options as needed */}
-        </select>
+          Generate Champions
+        </button>
       </div>
-      <button onClick={generateChampions}>Generate Champions</button>
       {blueTeam.length > 0 && redTeam.length > 0 && (
-        <div className="team-container">
-          <div className="team-column">
-            <h2>Blue Team:</h2>
-            <ul>
+        <div className="flex justify-around mx-5">
+          <div className="bg-gray-700 rounded p-5 w-1/2 mx-2">
+            <h2 className="text-2xl text-center mb-5">Blue Team:</h2>
+            <ul className="grid grid-cols-3 gap-4">
               {blueTeam.map((champion, index) => (
-                <li className="lipog" key={index}>
-                  {champion}
+                <li key={index} className="flex items-center">
+                  <img src={champion.img} className="w-16 h-16 mr-3" />
+                  {champion.name}
                 </li>
               ))}
             </ul>
           </div>
-          <div className="team-column">
-            <h2>Red Team:</h2>
-            <ul>
+          <div className="bg-gray-700 rounded p-5 w-1/2 mx-2">
+            <h2 className="text-2xl text-center mb-5">Red Team:</h2>
+            <ul className="grid grid-cols-3 gap-4">
               {redTeam.map((champion, index) => (
-                <li className="lipog" key={index}>
-                  {champion}
+                <li key={index} className="flex items-center">
+                  <img src={champion.img} className="w-16 h-16 mr-3" />
+                  {champion.name}
                 </li>
               ))}
             </ul>

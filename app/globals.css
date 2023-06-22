@@ -1,3 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   --max-width: 1100px;
   --border-radius: 12px;
@@ -85,16 +91,6 @@ body {
   overflow-x: hidden;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
-
 a {
   color: inherit;
   text-decoration: none;
@@ -106,14 +102,80 @@ a {
   }
 }
 
+/* body {
+  font-family: "Lato", sans-serif;
+  background-color: #6e5774;
+  color: #a5a2ad;
+}
+
+h1 {
+  color: #86848c;
+  text-align: center;
+}
+
+.headerDiv {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.languageSelector {
+  max-width: 20%;
+}
+
 .team-container {
   display: flex;
+  justify-content: space-around;
+  margin-top: 2em;
 }
 
 .team-column {
   flex: 1;
+  background-color: #484564;
+  border-radius: 5px;
+  padding: 1em;
+  margin: 1em;
+}
+
+.team-column ul {
+  column-width: 200px;
+  column-gap: 1em;
+  padding: 0;
+}
+
+.team-column h2 {
+  color: #5b5271;
+  text-align: center;
+  border-bottom: 1px solid #5b5271;
+  padding-bottom: 0.5em;
 }
 
 .lipog {
   list-style-type: none;
+  padding: 0.5em 0;
 }
+
+.lipog img {
+  max-width: 50px;
+  max-height: 50px;
+  width: auto;
+  height: auto;
+  margin-right: 10px;
+}
+
+button {
+  display: block;
+  background-color: #7c7a8a;
+  color: #231c35;
+  padding: 10px 20px;
+  margin: 1em auto;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #2a2b47;
+} */
