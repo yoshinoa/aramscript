@@ -67,10 +67,11 @@ function ChampionGenerator() {
         </button>
       </div>
       {blueTeam.length > 0 && redTeam.length > 0 && (
-        <div className="flex justify-around mx-5">
-          <div className="bg-gray-700 rounded p-5 w-1/2 mx-2">
+        <div className="flex flex-col md:flex-row justify-around mx-5">
+          <div className="bg-gray-700 rounded p-5 w-full md:w-1/2 mx-2 mb-5 md:mb-0 md:mr-2">
+            {/* Blue Team content */}
             <h2 className="text-2xl text-center mb-5">Blue Team:</h2>
-            <ul className="grid grid-cols-3 gap-4">
+            <ul className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               {blueTeam.map((champion, index) => (
                 <li key={index} className="flex items-center">
                   <img src={champion.img} className="w-16 h-16 mr-3" />
@@ -79,9 +80,10 @@ function ChampionGenerator() {
               ))}
             </ul>
           </div>
-          <div className="bg-gray-700 rounded p-5 w-1/2 mx-2">
+          <div className="bg-gray-700 rounded p-5 w-full md:w-1/2 mx-2">
+            {/* Red Team content */}
             <h2 className="text-2xl text-center mb-5">Red Team:</h2>
-            <ul className="grid grid-cols-3 gap-4">
+            <ul className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               {redTeam.map((champion, index) => (
                 <li key={index} className="flex items-center">
                   <img src={champion.img} className="w-16 h-16 mr-3" />
