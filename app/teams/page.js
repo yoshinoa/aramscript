@@ -24,7 +24,6 @@ export default function TeamsPage() {
         )
         .then((response) => {
           const championsData = response.data.data;
-          console.log(localData.blueTeam);
           const blueTeam = localData.blueTeam.map((x) => ({
             name: championsData[x].name,
             img: `http://ddragon.leagueoflegends.com/cdn/13.12.1/img/champion/${championsData[x].image.full}`,

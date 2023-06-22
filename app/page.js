@@ -27,7 +27,6 @@ function ChampionGenerator() {
           img: `http://ddragon.leagueoflegends.com/cdn/13.12.1/img/champion/${champion.image.full}`,
         })
       );
-      console.log(championsData);
 
       const shuffledChampions = champions.sort(() => 0.5 - Math.random());
 
@@ -44,7 +43,6 @@ function ChampionGenerator() {
         timestamp,
         lang: selectedLanguage,
       };
-      console.log(teamsData.blueTeam);
 
       const teamsDataStr = JSON.stringify(teamsData);
       const encodedTeamsData = Buffer(teamsDataStr).toString("base64");
