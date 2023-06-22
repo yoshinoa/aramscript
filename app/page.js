@@ -6,6 +6,7 @@ import Footer from "./components/footer";
 function ChampionGenerator() {
   const [blueTeam, setBlueTeam] = useState([]);
   const [redTeam, setRedTeam] = useState([]);
+  const [shareUrl, setShareUrl] = useState("");
 
   const [selectedLanguage, setSelectedLanguage] = useState("en_US");
 
@@ -31,6 +32,18 @@ function ChampionGenerator() {
 
       setBlueTeam(blueTeamChampions);
       setRedTeam(redTeamChampions);
+      const timestamp = new Date().toISOString();
+      const teamsData = {
+        blueTeam: blueTeamChampions,
+        redTeam: redTeamChampions,
+        timestamp,
+      };
+
+      const teamsDataStr = JSON.stringify(teamsData);
+      const encodedTeamsData = btoa(unescape(encodeURIComponent(teamsDataStr)));
+
+      // set shareable URL to state
+      setShareUrl(`${window.location.origin}/teams?data=${encodedTeamsData}`);
     } catch (error) {
       console.log(error);
     }
@@ -38,7 +51,7 @@ function ChampionGenerator() {
 
   return (
     <div className="bg-gray-800 text-gray-100 min-h-screen font-sans antialiased flex flex-col justify-between">
-      <div className="flex flex-col items-center py-10">
+      <div className="flex flex-col items-center">
         <h1 className="text-4xl mb-5">ARAM Champion Generator</h1>
         <div className="mb-5">
           <label htmlFor="language" className="mr-3">
@@ -67,30 +80,47 @@ function ChampionGenerator() {
         </button>
       </div>
       {blueTeam.length > 0 && redTeam.length > 0 && (
-        <div className="flex flex-col md:flex-row justify-around mx-5">
-          <div className="bg-gray-700 rounded p-5 w-full md:w-1/2 mx-2 mb-5 md:mb-0 md:mr-2">
-            {/* Blue Team content */}
-            <h2 className="text-2xl text-center mb-5">Blue Team:</h2>
-            <ul className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-              {blueTeam.map((champion, index) => (
-                <li key={index} className="flex items-center">
-                  <img src={champion.img} className="w-16 h-16 mr-3" />
-                  {champion.name}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="bg-gray-700 rounded p-5 w-full md:w-1/2 mx-2">
-            {/* Red Team content */}
-            <h2 className="text-2xl text-center mb-5">Red Team:</h2>
-            <ul className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-              {redTeam.map((champion, index) => (
-                <li key={index} className="flex items-center">
-                  <img src={champion.img} className="w-16 h-16 mr-3" />
-                  {champion.name}
-                </li>
-              ))}
-            </ul>
+        <div>
+          {shareUrl && (
+            <div className="flex flex-col items-center py-10">
+              <h2 className="text-2xl mb-5">Share this setup</h2>
+              <p className="mb-5">
+                Copy this link to share the team setup with your friends:
+              </p>
+              <input
+                type="text"
+                readOnly
+                value={shareUrl}
+                className="p-2 text-black"
+                onClick={(e) => e.target.select()}
+              />
+            </div>
+          )}
+          <div className="flex flex-col md:flex-row justify-around mx-5">
+            <div className="bg-gray-700 rounded p-5 w-full md:w-1/2 mx-2 mb-5 md:mb-0 md:mr-2">
+              {/* Blue Team content */}
+              <h2 className="text-2xl text-center mb-5">Blue Team:</h2>
+              <ul className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                {blueTeam.map((champion, index) => (
+                  <li key={index} className="flex items-center">
+                    <img src={champion.img} className="w-16 h-16 mr-3" />
+                    {champion.name}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="bg-gray-700 rounded p-5 w-full md:w-1/2 mx-2">
+              {/* Red Team content */}
+              <h2 className="text-2xl text-center mb-5">Red Team:</h2>
+              <ul className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                {redTeam.map((champion, index) => (
+                  <li key={index} className="flex items-center">
+                    <img src={champion.img} className="w-16 h-16 mr-3" />
+                    {champion.name}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       )}
