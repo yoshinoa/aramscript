@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import axios from "axios";
+import Footer from "./components/footer";
 
 function ChampionGenerator() {
   const [blueTeam, setBlueTeam] = useState([]);
@@ -36,9 +37,9 @@ function ChampionGenerator() {
   };
 
   return (
-    <div className="bg-gray-800 text-gray-100 min-h-screen font-sans">
+    <div className="bg-gray-800 text-gray-100 min-h-screen font-sans antialiased flex flex-col justify-between">
       <div className="flex flex-col items-center py-10">
-        <h1 className="text-4xl mb-5">League of Legends Champion Generator</h1>
+        <h1 className="text-4xl mb-5">ARAM Champion Generator</h1>
         <div className="mb-5">
           <label htmlFor="language" className="mr-3">
             Select Language:
@@ -88,6 +89,7 @@ function ChampionGenerator() {
           </div>
         </div>
       )}
+      <Footer />
     </div>
   );
 }
