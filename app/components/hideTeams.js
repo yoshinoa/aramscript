@@ -1,6 +1,6 @@
 function HideTeams({ setHideTeams, hideTeams }) {
   return (
-    <div className="hide-teams">
+    <div className="hide-teams mb-2">
       <label htmlFor="hide-teams" className="mr-3">
         Hide Teams:
       </label>

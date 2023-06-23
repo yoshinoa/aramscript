@@ -1,6 +1,6 @@
 function AmountSelector({ amountOfChampions, setAmountOfChampions }) {
   return (
-    <div className="amount-selector">
+    <div className="amount-selector mb-2">
       <label htmlFor="amount-selector" className="mr-3">
         Amount of Champions:
       </label>

@@ -23,6 +23,8 @@ function ChampionGenerator() {
 
   const [amountOfChampions, setAmountOfChampions] = useState(15);
 
+  const [trueRandom, setTrueRandom] = useState(false);
+
   const [blueShareTeamUrl, setBlueShareTeamUrl] = useState("");
   const [redShareTeamUrl, setRedShareTeamUrl] = useState("");
 
@@ -34,6 +36,16 @@ function ChampionGenerator() {
   const handleHideTeams = (val) => {
     setHideTeams(val);
     localStorage.setItem("hideTeams", val);
+  };
+
+  const handleAmountOfChampions = (amount) => {
+    setAmountOfChampions(amount);
+    localStorage.setItem("amountOfChampions", amount);
+  };
+
+  const handleTrueRandom = (val) => {
+    setTrueRandom(val);
+    localStorage.setItem("trueRandom", val);
   };
 
   const handleBanChampion = (champion) => {
@@ -90,9 +102,7 @@ function ChampionGenerator() {
         })
       );
 
-      const shuffledChampions = champions.sort(() => 0.5 - Math.random());
-
-      const unbannedChampions = shuffledChampions.filter(
+      const unbannedChampions = champions.filter(
         (champion) =>
           !bannedChampions.find(
             (bannedChampion) =>
@@ -100,8 +110,14 @@ function ChampionGenerator() {
           )
       );
 
-      const blueTeamChampions = unbannedChampions.slice(0, amountOfChampions);
-      const redTeamChampions = unbannedChampions.slice(
+      let shuffledChampions = unbannedChampions.sort(() => 0.5 - Math.random());
+
+      const blueTeamChampions = shuffledChampions.slice(0, amountOfChampions);
+      if (trueRandom) {
+        shuffledChampions = unbannedChampions.sort(() => 0.5 - Math.random());
+      }
+
+      const redTeamChampions = shuffledChampions.slice(
         amountOfChampions,
         amountOfChampions * 2
       );
@@ -177,6 +193,8 @@ function ChampionGenerator() {
     const savedBans = localStorage.getItem("bannedChampions");
     const savedLanguage = localStorage.getItem("selectedLanguage");
     const savedHideTeams = localStorage.getItem("hideTeams");
+    const savedAmountOfChampions = localStorage.getItem("amountOfChampions");
+    const savedTrueRandom = localStorage.getItem("trueRandom");
 
     if (savedBans) {
       setBannedChampions(JSON.parse(savedBans));
@@ -188,6 +206,14 @@ function ChampionGenerator() {
 
     if (savedHideTeams) {
       setHideTeams(savedHideTeams === "true");
+    }
+
+    if (savedAmountOfChampions) {
+      setAmountOfChampions(savedAmountOfChampions);
+    }
+
+    if (savedTrueRandom) {
+      setTrueRandom(savedTrueRandom === "true");
     }
   }, []);
 
@@ -206,7 +232,9 @@ function ChampionGenerator() {
           setHideTeams={handleHideTeams}
           hideTeams={hideTeams}
           amountOfChampions={amountOfChampions}
-          setAmountOfChampions={setAmountOfChampions}
+          setAmountOfChampions={handleAmountOfChampions}
+          trueRandom={trueRandom}
+          setTrueRandom={handleTrueRandom}
         />
       </Menu>
       <div className="flex flex-col items-center">

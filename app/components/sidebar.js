@@ -2,6 +2,7 @@ import BanSearch from "./banSearch";
 import LanguageSelector from "./languageSelector";
 import HideTeams from "./hideTeams";
 import AmountSelector from "./amountSelector";
+import TrueRandom from "./trueRandom";
 
 const SettingsSidebar = ({
   selectedLanguage,
@@ -16,6 +17,8 @@ const SettingsSidebar = ({
   hideTeams,
   amountOfChampions,
   setAmountOfChampions,
+  trueRandom,
+  setTrueRandom,
 }) => {
   return (
     <div className="settings-sidebar">
@@ -36,6 +39,7 @@ const SettingsSidebar = ({
         amountOfChampions={amountOfChampions}
         setAmountOfChampions={setAmountOfChampions}
       />
+      <TrueRandom trueRandom={trueRandom} setTrueRandom={setTrueRandom} />
     </div>
   );
 };
