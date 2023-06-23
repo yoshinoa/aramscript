@@ -4,6 +4,10 @@ import axios from "axios";
 import Footer from "./components/footer";
 import Team from "./components/team";
 import Share from "./components/share";
+import BanSearch from "./components/banSearch";
+import LanguageSelector from "./components/languageSelector";
+import SettingsSidebar from "./components/sidebar";
+import { slide as Menu } from "react-burger-menu";
 
 function ChampionGenerator() {
   const [blueTeam, setBlueTeam] = useState([]);
@@ -14,9 +18,11 @@ function ChampionGenerator() {
   const [allChampions, setAllChampions] = useState({});
   const [selectedLanguage, setSelectedLanguage] = useState("en_US");
   const [searchText, setSearchText] = useState("");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleChangeLanguage = (event) => {
     setSelectedLanguage(event.target.value);
+    localStorage.setItem("selectedLanguage", event.target.value);
   };
 
   const handleBanChampion = (champion) => {
@@ -125,82 +131,34 @@ function ChampionGenerator() {
 
   useEffect(() => {
     const savedBans = localStorage.getItem("bannedChampions");
+    const savedLanguage = localStorage.getItem("selectedLanguage");
 
     if (savedBans) {
       setBannedChampions(JSON.parse(savedBans));
+    }
+
+    if (savedLanguage) {
+      setSelectedLanguage(savedLanguage);
     }
   }, []);
 
   return (
     <div className="bg-gray-800 text-gray-100 min-h-screen font-sans antialiased flex flex-col justify-between">
+      <Menu isOpen={sidebarOpen} disableAutoFocus>
+        <SettingsSidebar
+          searchText={searchText}
+          handleChangeSearch={handleChangeSearch}
+          searchResults={searchResults}
+          handleBanChampion={handleBanChampion}
+          handleUnbanChampion={handleUnbanChampion}
+          bannedChampions={bannedChampions}
+          selectedLanguage={selectedLanguage}
+          handleChangeLanguage={handleChangeLanguage}
+        />
+      </Menu>
       <div className="flex flex-col items-center">
         <h1 className="text-4xl mb-5">ARAM Champion Generator</h1>
-        <div className="relative mb-5 items-center">
-          <label htmlFor="search" className="mr-3">
-            Bans:
-          </label>
-          <input
-            id="search"
-            value={searchText} // <- control the input value through state
-            onChange={handleChangeSearch}
-            className="rounded border-2 border-gray-600 bg-gray-700 text-gray-200 p-2"
-            autoComplete="off"
-          />
-          <div className="absolute w-full bg-gray-300 text-black">
-            {searchResults.map((champion) => (
-              <div
-                key={champion.originalName}
-                onClick={() => handleBanChampion(champion)}
-                className="cursor-pointer flex items-center p-1"
-              >
-                <img
-                  src={champion.img}
-                  alt={champion.name}
-                  width="30"
-                  height="30"
-                />
-                <span className="ml-2">{champion.name}</span>
-              </div>
-            ))}
-          </div>
-        </div>
 
-        <div className="mb-5 flex flex-wrap">
-          {" "}
-          {/* <-- use flexbox for horizontal layout */}
-          <label className="mr-3">Banned Champions:</label>
-          {bannedChampions.map((champion) => (
-            <div key={champion.originalName} className="mr-3">
-              <img
-                src={champion.img}
-                alt={champion.name}
-                width="30"
-                height="30"
-                onClick={() => handleUnbanChampion(champion)}
-                style={{ cursor: "pointer" }}
-              />
-            </div>
-          ))}
-        </div>
-        <div className="mb-5">
-          <label htmlFor="language" className="mr-3">
-            Select Language:
-          </label>
-          <select
-            id="language"
-            value={selectedLanguage}
-            onChange={handleChangeLanguage}
-            className="rounded border-2 border-gray-600 bg-gray-700 text-gray-200 p-2"
-          >
-            <option value="en_US">English</option>
-            <option value="ja_JP">日本語</option>
-            <option value="zh_CN">简体中文</option>
-            <option value="zh_TW">繁體中文</option>
-            <option value="ko_KR">한국어</option>
-            <option value="ru_RU">Русский</option>
-            <option value="el_GR">Ελληνικά</option>
-          </select>
-        </div>
         <button
           onClick={generateChampions}
           className="bg-gray-600 hover:bg-gray-500 text-gray-200 font-bold py-2 px-4 rounded mb-2"
@@ -217,6 +175,7 @@ function ChampionGenerator() {
           {shareUrl && <Share shareUrl={shareUrl} />}
         </div>
       )}
+
       <Footer />
     </div>
   );
