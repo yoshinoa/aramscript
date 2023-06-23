@@ -4,8 +4,7 @@ import axios from "axios";
 import Footer from "./components/footer";
 import Team from "./components/team";
 import Share from "./components/share";
-import BanSearch from "./components/banSearch";
-import LanguageSelector from "./components/languageSelector";
+import shuffle from "./util/shuffle";
 import SettingsSidebar from "./components/sidebar";
 import { slide as Menu } from "react-burger-menu";
 
@@ -110,11 +109,11 @@ function ChampionGenerator() {
           )
       );
 
-      let shuffledChampions = unbannedChampions.sort(() => 0.5 - Math.random());
+      let shuffledChampions = shuffle(unbannedChampions);
 
       const blueTeamChampions = shuffledChampions.slice(0, amountOfChampions);
       if (trueRandom) {
-        shuffledChampions = unbannedChampions.sort(() => 0.5 - Math.random());
+        shuffledChampions = shuffle(unbannedChampions);
       }
 
       const redTeamChampions = shuffledChampions.slice(
