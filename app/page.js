@@ -108,18 +108,19 @@ function ChampionGenerator() {
               bannedChampion.originalName === champion.originalName
           )
       );
-
-      let shuffledChampions = shuffle(unbannedChampions);
-
+      const shuffledChampions = shuffle(unbannedChampions);
       const blueTeamChampions = shuffledChampions.slice(0, amountOfChampions);
-      if (trueRandom) {
-        shuffledChampions = shuffle(unbannedChampions);
-      }
+      let redTeamChampions;
 
-      const redTeamChampions = shuffledChampions.slice(
-        amountOfChampions,
-        amountOfChampions * 2
-      );
+      if (trueRandom) {
+        const shuffledChampions2 = shuffle(unbannedChampions);
+        redTeamChampions = shuffledChampions2.slice(0, amountOfChampions);
+      } else {
+        redTeamChampions = shuffledChampions.slice(
+          amountOfChampions,
+          amountOfChampions * 2
+        );
+      }
 
       setBlueTeam(blueTeamChampions);
       setRedTeam(redTeamChampions);
