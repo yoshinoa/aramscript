@@ -21,6 +21,8 @@ function ChampionGenerator() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [hideTeams, setHideTeams] = useState(false);
 
+  const [amountOfChampions, setAmountOfChampions] = useState(15);
+
   const [blueShareTeamUrl, setBlueShareTeamUrl] = useState("");
   const [redShareTeamUrl, setRedShareTeamUrl] = useState("");
 
@@ -98,8 +100,11 @@ function ChampionGenerator() {
           )
       );
 
-      const blueTeamChampions = unbannedChampions.slice(0, 15);
-      const redTeamChampions = unbannedChampions.slice(15, 30);
+      const blueTeamChampions = unbannedChampions.slice(0, amountOfChampions);
+      const redTeamChampions = unbannedChampions.slice(
+        amountOfChampions,
+        amountOfChampions * 2
+      );
 
       setBlueTeam(blueTeamChampions);
       setRedTeam(redTeamChampions);
@@ -200,6 +205,8 @@ function ChampionGenerator() {
           handleChangeLanguage={handleChangeLanguage}
           setHideTeams={handleHideTeams}
           hideTeams={hideTeams}
+          amountOfChampions={amountOfChampions}
+          setAmountOfChampions={setAmountOfChampions}
         />
       </Menu>
       <div className="flex flex-col items-center">
