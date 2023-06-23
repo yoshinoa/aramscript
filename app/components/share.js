@@ -1,9 +1,7 @@
 function Share(props) {
   return (
-    <div className="flex flex-col items-center py-10">
-      <p className="mb-5">
-        Copy this link to share the team setup with your friends:
-      </p>
+    <div className="flex flex-col items-center">
+      <p className="mb-5">{props.text}</p>
       <input
         type="text"
         readOnly

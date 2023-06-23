@@ -1,5 +1,6 @@
 import BanSearch from "./banSearch";
 import LanguageSelector from "./languageSelector";
+import HideTeams from "./hideTeams";
 
 const SettingsSidebar = ({
   selectedLanguage,
@@ -10,6 +11,8 @@ const SettingsSidebar = ({
   handleBanChampion,
   handleUnbanChampion,
   bannedChampions,
+  setHideTeams,
+  hideTeams,
 }) => {
   return (
     <div className="settings-sidebar">
@@ -25,6 +28,7 @@ const SettingsSidebar = ({
         selectedLanguage={selectedLanguage}
         handleChangeLanguage={handleChangeLanguage}
       />
+      <HideTeams setHideTeams={setHideTeams} hideTeams={hideTeams} />
     </div>
   );
 };

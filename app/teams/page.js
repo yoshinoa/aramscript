@@ -7,6 +7,7 @@ import Team from "../components/team";
 export default function TeamsPage() {
   const [data, setData] = useState("");
   const [teamsData, setTeamsData] = useState(null);
+  const [soloTeam, setSoloTeam] = useState(false);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -18,6 +19,10 @@ export default function TeamsPage() {
     if (data) {
       const compressedData = Buffer.from(data, "base64");
       const localData = JSON.parse(compressedData.toString());
+      console.log(localData.soloTeam);
+      console.log(localData);
+      setSoloTeam(localData.soloteam);
+      console.log(soloTeam);
 
       axios
         .get(
@@ -29,6 +34,14 @@ export default function TeamsPage() {
             name: championsData[x].name,
             img: `http://ddragon.leagueoflegends.com/cdn/13.12.1/img/champion/${championsData[x].image.full}`,
           }));
+          if (localData.soloteam) {
+            setTeamsData({
+              blueTeam,
+              redTeam: null,
+              timestamp: localData.timestamp,
+            });
+            return;
+          }
           const redTeam = localData.redTeam.map((x) => ({
             name: championsData[x].name,
             img: `http://ddragon.leagueoflegends.com/cdn/13.12.1/img/champion/${championsData[x].image.full}`,
@@ -64,8 +77,8 @@ export default function TeamsPage() {
       </div>
 
       <div className="flex flex-col md:flex-row justify-around mx-5">
-        <Team teamname={"Blue Team"} team={blueTeam} />
-        <Team teamname={"Red Team"} team={redTeam} />
+        <Team teamname={soloTeam ? "Team" : "Blue Team"} team={blueTeam} />
+        {!soloTeam && <Team teamname={"Red Team"} team={redTeam} />}
       </div>
 
       <Footer />

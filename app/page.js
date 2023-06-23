@@ -19,10 +19,19 @@ function ChampionGenerator() {
   const [selectedLanguage, setSelectedLanguage] = useState("en_US");
   const [searchText, setSearchText] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [hideTeams, setHideTeams] = useState(false);
+
+  const [blueShareTeamUrl, setBlueShareTeamUrl] = useState("");
+  const [redShareTeamUrl, setRedShareTeamUrl] = useState("");
 
   const handleChangeLanguage = (event) => {
     setSelectedLanguage(event.target.value);
     localStorage.setItem("selectedLanguage", event.target.value);
+  };
+
+  const handleHideTeams = (val) => {
+    setHideTeams(val);
+    localStorage.setItem("hideTeams", val);
   };
 
   const handleBanChampion = (champion) => {
@@ -95,19 +104,49 @@ function ChampionGenerator() {
       setBlueTeam(blueTeamChampions);
       setRedTeam(redTeamChampions);
       const timestamp = new Date().toISOString();
+      if (!hideTeams) {
+        const teamsData = {
+          blueTeam: blueTeamChampions.map((x) => x.originalName),
+          redTeam: redTeamChampions.map((x) => x.originalName),
+          timestamp,
+          lang: selectedLanguage,
+          soloteam: false,
+        };
 
-      const teamsData = {
-        blueTeam: blueTeamChampions.map((x) => x.originalName),
-        redTeam: redTeamChampions.map((x) => x.originalName),
-        timestamp,
-        lang: selectedLanguage,
-      };
+        const teamsDataStr = JSON.stringify(teamsData);
+        const encodedTeamsData = Buffer(teamsDataStr).toString("base64");
 
-      const teamsDataStr = JSON.stringify(teamsData);
-      const encodedTeamsData = Buffer(teamsDataStr).toString("base64");
+        // set shareable URL to state
+        setShareUrl(`${window.location.origin}/teams?data=${encodedTeamsData}`);
+      } else {
+        const blueTeamData = {
+          blueTeam: blueTeamChampions.map((x) => x.originalName),
+          timestamp,
+          lang: selectedLanguage,
+          soloteam: true,
+        };
 
-      // set shareable URL to state
-      setShareUrl(`${window.location.origin}/teams?data=${encodedTeamsData}`);
+        const redTeamData = {
+          blueTeam: redTeamChampions.map((x) => x.originalName),
+          timestamp,
+          lang: selectedLanguage,
+          soloteam: true,
+        };
+
+        const blueTeamsDataStr = JSON.stringify(blueTeamData);
+        const blueEncodedTeamsData =
+          Buffer(blueTeamsDataStr).toString("base64");
+
+        const redTeamsDataStr = JSON.stringify(redTeamData);
+        const redEncodedTeamsData = Buffer(redTeamsDataStr).toString("base64");
+
+        setBlueShareTeamUrl(
+          `${window.location.origin}/teams?data=${blueEncodedTeamsData}`
+        );
+        setRedShareTeamUrl(
+          `${window.location.origin}/teams?data=${redEncodedTeamsData}`
+        );
+      }
     } catch (error) {
       console.log(error);
     }
@@ -132,6 +171,7 @@ function ChampionGenerator() {
   useEffect(() => {
     const savedBans = localStorage.getItem("bannedChampions");
     const savedLanguage = localStorage.getItem("selectedLanguage");
+    const savedHideTeams = localStorage.getItem("hideTeams");
 
     if (savedBans) {
       setBannedChampions(JSON.parse(savedBans));
@@ -139,6 +179,10 @@ function ChampionGenerator() {
 
     if (savedLanguage) {
       setSelectedLanguage(savedLanguage);
+    }
+
+    if (savedHideTeams) {
+      setHideTeams(savedHideTeams === "true");
     }
   }, []);
 
@@ -154,10 +198,12 @@ function ChampionGenerator() {
           bannedChampions={bannedChampions}
           selectedLanguage={selectedLanguage}
           handleChangeLanguage={handleChangeLanguage}
+          setHideTeams={handleHideTeams}
+          hideTeams={hideTeams}
         />
       </Menu>
       <div className="flex flex-col items-center">
-        <h1 className="text-4xl mb-5">ARAM Champion Generator</h1>
+        <h1 className="text-4xl mb-5 ">ARAM Champion Generator</h1>
 
         <button
           onClick={generateChampions}
@@ -166,13 +212,24 @@ function ChampionGenerator() {
           Generate Champions
         </button>
       </div>
-      {blueTeam.length > 0 && redTeam.length > 0 && (
+      {blueTeam.length > 0 && redTeam.length > 0 && !hideTeams && (
         <div>
           <div className="flex flex-col md:flex-row justify-around mx-5">
             <Team team={blueTeam} teamname={"Blue Team"} />
             <Team team={redTeam} teamname={"Red Team"} />
           </div>
-          {shareUrl && <Share shareUrl={shareUrl} />}
+          {shareUrl && (
+            <Share
+              shareUrl={shareUrl}
+              text={"Copy this link to share the team setup with your friends:"}
+            />
+          )}
+        </div>
+      )}
+      {blueTeam.length > 0 && redTeam.length > 0 && hideTeams && (
+        <div>
+          <Share shareUrl={blueShareTeamUrl} text={"Blue Team Link"} />
+          <Share shareUrl={redShareTeamUrl} text={"Red Team Link"} />
         </div>
       )}
 
