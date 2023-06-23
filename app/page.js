@@ -13,6 +13,7 @@ function ChampionGenerator() {
   const [searchResults, setSearchResults] = useState([]);
   const [allChampions, setAllChampions] = useState({});
   const [selectedLanguage, setSelectedLanguage] = useState("en_US");
+  const [searchText, setSearchText] = useState("");
 
   const handleChangeLanguage = (event) => {
     setSelectedLanguage(event.target.value);
@@ -23,6 +24,7 @@ function ChampionGenerator() {
     setBannedChampions(newBannedChampions);
     localStorage.setItem("bannedChampions", JSON.stringify(newBannedChampions));
     setSearchResults([]);
+    setSearchText("");
   };
 
   const handleUnbanChampion = (championToUnban) => {
@@ -31,9 +33,12 @@ function ChampionGenerator() {
     );
     setBannedChampions(newBannedChampions);
     localStorage.setItem("bannedChampions", JSON.stringify(newBannedChampions));
+    setSearchText("");
   };
 
   const handleChangeSearch = (event) => {
+    const inputValue = event.target.value;
+    setSearchText(inputValue);
     const searchText = event.target.value.toLowerCase();
     if (searchText.length < 2) {
       setSearchResults([]);
@@ -136,6 +141,7 @@ function ChampionGenerator() {
           </label>
           <input
             id="search"
+            value={searchText} // <- control the input value through state
             onChange={handleChangeSearch}
             className="rounded border-2 border-gray-600 bg-gray-700 text-gray-200 p-2"
             autoComplete="off"
