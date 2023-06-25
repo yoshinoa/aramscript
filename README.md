@@ -4,4 +4,4 @@ Typically in ARAM you get 2 rerolls, making a 15 size pool of champions, but in 
 
 You can view this script at:
 
-https://aramscript.vercel.app/
+[shurim](https://www.shurimashuffle.com/)https://www.shurimashuffle.com/
