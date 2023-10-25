@@ -1,10 +1,10 @@
-function ImagePreloader({ champions }) {
+function ImagePreloader({ champions, patchVersion }) {
   return (
     <div style={{ display: "none" }}>
       {champions.map((champion) => (
         <img
           key={champion.id}
-          src={`http://ddragon.leagueoflegends.com/cdn/13.12.1/img/champion/${champion.image.full}`}
+          src={`http://ddragon.leagueoflegends.com/cdn/${patchVersion}/img/champion/${champion.image.full}`}
           alt={champion.name}
         />
       ))}

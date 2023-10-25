@@ -20,6 +20,7 @@ function ChampionGenerator() {
   const [searchText, setSearchText] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [hideTeams, setHideTeams] = useState(false);
+  const [recentPatch, setRecentPatch] = useState("");
 
   const [amountOfChampions, setAmountOfChampions] = useState(15);
 
@@ -85,7 +86,7 @@ function ChampionGenerator() {
       .map((champion) => ({
         originalName: champion.id,
         name: champion.name,
-        img: `http://ddragon.leagueoflegends.com/cdn/13.12.1/img/champion/${champion.image.full}`,
+        img: `http://ddragon.leagueoflegends.com/cdn/${recentPatch}/img/champion/${champion.image.full}`,
       }));
 
     setSearchResults(results);
@@ -98,7 +99,7 @@ function ChampionGenerator() {
         ([originalName, champion]) => ({
           originalName,
           name: champion.name,
-          img: `http://ddragon.leagueoflegends.com/cdn/13.12.1/img/champion/${champion.image.full}`,
+          img: `http://ddragon.leagueoflegends.com/cdn/${recentPatch}/img/champion/${champion.image.full}`,
         })
       );
 
@@ -175,11 +176,28 @@ function ChampionGenerator() {
   };
 
   useEffect(() => {
+    const mostRecentPatch = async () => {
+      try {
+        const response = await axios.get(
+          "https://ddragon.leagueoflegends.com/api/versions.json"
+        );
+        setRecentPatch(response.data[0]);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    mostRecentPatch();
+  }, []);
+
+  useEffect(() => {
     // Fetch the champion data when the component first mounts
     const fetchChampionsData = async () => {
       try {
+        if (!recentPatch) {
+          return;
+        }
         const response = await axios.get(
-          `https://ddragon.leagueoflegends.com/cdn/13.12.1/data/${selectedLanguage}/champion.json`
+          `https://ddragon.leagueoflegends.com/cdn/${recentPatch}/data/${selectedLanguage}/champion.json`
         );
         setAllChampions(response.data.data); // Save the data to state
       } catch (error) {
@@ -188,7 +206,7 @@ function ChampionGenerator() {
     };
 
     fetchChampionsData();
-  }, [selectedLanguage]);
+  }, [selectedLanguage, recentPatch]);
 
   useEffect(() => {
     const savedBans = localStorage.getItem("bannedChampions");
@@ -270,7 +288,10 @@ function ChampionGenerator() {
       )}
 
       <Footer />
-      <ImagePreloader champions={Object.values(allChampions)} />
+      <ImagePreloader
+        champions={Object.values(allChampions)}
+        patchVersion={recentPatch}
+      />
     </div>
   );
 }
