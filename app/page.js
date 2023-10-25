@@ -7,6 +7,7 @@ import Share from "./components/share";
 import shuffle from "./util/shuffle";
 import SettingsSidebar from "./components/sidebar";
 import { slide as Menu } from "react-burger-menu";
+import ImagePreloader from "./components/imagePreloader";
 
 function ChampionGenerator() {
   const [blueTeam, setBlueTeam] = useState([]);
@@ -269,6 +270,7 @@ function ChampionGenerator() {
       )}
 
       <Footer />
+      <ImagePreloader champions={Object.values(allChampions)} />
     </div>
   );
 }
