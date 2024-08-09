@@ -6,7 +6,7 @@ function Share(props) {
         type="text"
         readOnly
         value={props.shareUrl}
-        className="p-2 text-black"
+        className="p-2 text-white"
         onClick={(e) => e.target.select()}
       />
     </div>
