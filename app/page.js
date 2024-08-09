@@ -8,6 +8,7 @@ import shuffle from "./util/shuffle";
 import SettingsSidebar from "./components/sidebar";
 import { slide as Menu } from "react-burger-menu";
 import ImagePreloader from "./components/imagePreloader";
+import LZString from "lz-string";
 
 function ChampionGenerator() {
   const [blueTeam, setBlueTeam] = useState([]);
@@ -137,10 +138,11 @@ function ChampionGenerator() {
         };
 
         const teamsDataStr = JSON.stringify(teamsData);
-        const encodedTeamsData = Buffer(teamsDataStr).toString("base64");
-
-        // set shareable URL to state
-        setShareUrl(`${window.location.origin}/teams?data=${encodedTeamsData}`);
+        const compressedTeamsData =
+          LZString.compressToEncodedURIComponent(teamsDataStr);
+        setShareUrl(
+          `${window.location.origin}/teams?data=${compressedTeamsData}`
+        );
       } else {
         const blueTeamData = {
           blueTeam: blueTeamChampions.map((x) => x.originalName),
@@ -157,17 +159,20 @@ function ChampionGenerator() {
         };
 
         const blueTeamsDataStr = JSON.stringify(blueTeamData);
-        const blueEncodedTeamsData =
-          Buffer(blueTeamsDataStr).toString("base64");
 
         const redTeamsDataStr = JSON.stringify(redTeamData);
-        const redEncodedTeamsData = Buffer(redTeamsDataStr).toString("base64");
+
+        // Compress and encode
+        const blueCompressedTeamsData =
+          LZString.compressToEncodedURIComponent(blueTeamsDataStr);
+        const redCompressedTeamsData =
+          LZString.compressToEncodedURIComponent(redTeamsDataStr);
 
         setBlueShareTeamUrl(
-          `${window.location.origin}/teams?data=${blueEncodedTeamsData}`
+          `${window.location.origin}/teams?data=${blueCompressedTeamsData}`
         );
         setRedShareTeamUrl(
-          `${window.location.origin}/teams?data=${redEncodedTeamsData}`
+          `${window.location.origin}/teams?data=${redCompressedTeamsData}`
         );
       }
     } catch (error) {

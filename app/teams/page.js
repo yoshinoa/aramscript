@@ -3,11 +3,13 @@ import { useState, useEffect } from "react";
 import Footer from "../components/footer";
 import axios from "axios";
 import Team from "../components/team";
+import LZString from "lz-string";
 
 export default function TeamsPage() {
   const [data, setData] = useState("");
   const [teamsData, setTeamsData] = useState(null);
   const [soloTeam, setSoloTeam] = useState(false);
+  const [recentPatch, setRecentPatch] = useState("");
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -16,9 +18,23 @@ export default function TeamsPage() {
   }, []);
 
   useEffect(() => {
-    if (data) {
-      const compressedData = Buffer.from(data, "base64");
-      const localData = JSON.parse(compressedData.toString());
+    const mostRecentPatch = async () => {
+      try {
+        const response = await axios.get(
+          "https://ddragon.leagueoflegends.com/api/versions.json"
+        );
+        setRecentPatch(response.data[0]);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    mostRecentPatch();
+  }, []);
+
+  useEffect(() => {
+    if (data && recentPatch) {
+      const decompressedData = LZString.decompressFromEncodedURIComponent(data);
+      const localData = JSON.parse(decompressedData);
       console.log(localData.soloTeam);
       console.log(localData);
       setSoloTeam(localData.soloteam);
@@ -26,13 +42,13 @@ export default function TeamsPage() {
 
       axios
         .get(
-          `https://ddragon.leagueoflegends.com/cdn/13.12.1/data/${localData.lang}/champion.json`
+          `https://ddragon.leagueoflegends.com/cdn/${recentPatch}/data/${localData.lang}/champion.json`
         )
         .then((response) => {
           const championsData = response.data.data;
           const blueTeam = localData.blueTeam.map((x) => ({
             name: championsData[x].name,
-            img: `http://ddragon.leagueoflegends.com/cdn/13.12.1/img/champion/${championsData[x].image.full}`,
+            img: `http://ddragon.leagueoflegends.com/cdn/${recentPatch}/img/champion/${championsData[x].image.full}`,
           }));
           if (localData.soloteam) {
             setTeamsData({
@@ -44,12 +60,12 @@ export default function TeamsPage() {
           }
           const redTeam = localData.redTeam.map((x) => ({
             name: championsData[x].name,
-            img: `http://ddragon.leagueoflegends.com/cdn/13.12.1/img/champion/${championsData[x].image.full}`,
+            img: `http://ddragon.leagueoflegends.com/cdn/${recentPatch}/img/champion/${championsData[x].image.full}`,
           }));
           setTeamsData({ blueTeam, redTeam, timestamp: localData.timestamp });
         });
     }
-  }, [data]);
+  }, [data, recentPatch]);
 
   if (!teamsData) {
     return <div>Loading...</div>;
