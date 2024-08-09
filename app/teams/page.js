@@ -10,6 +10,7 @@ export default function TeamsPage() {
   const [teamsData, setTeamsData] = useState(null);
   const [soloTeam, setSoloTeam] = useState(false);
   const [recentPatch, setRecentPatch] = useState("");
+  const [formattedTimestamp, setFormattedTimestamp] = useState("");
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -35,10 +36,7 @@ export default function TeamsPage() {
     if (data && recentPatch) {
       const decompressedData = LZString.decompressFromEncodedURIComponent(data);
       const localData = JSON.parse(decompressedData);
-      console.log(localData.soloTeam);
-      console.log(localData);
       setSoloTeam(localData.soloteam);
-      console.log(soloTeam);
 
       axios
         .get(
@@ -63,27 +61,22 @@ export default function TeamsPage() {
             img: `http://ddragon.leagueoflegends.com/cdn/${recentPatch}/img/champion/${championsData[x].image.full}`,
           }));
           setTeamsData({ blueTeam, redTeam, timestamp: localData.timestamp });
+
+          const date = new Date(localData.timestamp);
+
+          // Format the date
+          const options = {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          };
+          const fmtTimestamp = date.toLocaleDateString(undefined, options);
+          setFormattedTimestamp(fmtTimestamp);
         });
     }
   }, [data, recentPatch]);
-
-  if (!teamsData) {
-    return <div>Loading...</div>;
-  }
-
-  const { blueTeam, redTeam, timestamp } = teamsData;
-
-  const date = new Date(timestamp);
-
-  // Format the date
-  const options = {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  };
-  const formattedTimestamp = date.toLocaleDateString(undefined, options);
 
   return (
     <div className="bg-gray-800 text-gray-100 min-h-screen font-sans antialiased flex flex-col justify-between">
@@ -93,8 +86,18 @@ export default function TeamsPage() {
       </div>
 
       <div className="flex flex-col md:flex-row justify-around mx-5">
-        <Team teamname={soloTeam ? "Team" : "Blue Team"} team={blueTeam} />
-        {!soloTeam && <Team teamname={"Red Team"} team={redTeam} />}
+        {!teamsData ? (
+          <p>Loading...</p>
+        ) : (
+          <Team
+            teamname={soloTeam ? "Team" : "Blue Team"}
+            team={teamsData.blueTeam}
+          />
+        )}
+
+        {!soloTeam && teamsData && (
+          <Team teamname={"Red Team"} team={teamsData.redTeam} />
+        )}
       </div>
 
       <Footer />
